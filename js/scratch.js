@@ -1,4 +1,4 @@
-!function() {
+!function () {
     'use strict';
 
     function Player(name) {
@@ -82,7 +82,7 @@
         this.style.backgroundImage = `url('img/${game.active().icon}')`;
     }
 
-    function removeBackGround(){
+    function removeBackGround() {
         this.style.backgroundImage = '';
     }
 
