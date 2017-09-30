@@ -56,8 +56,8 @@
                     }
                 } while (thinking);
             }
-        }
-    } //Match or game Constructor
+        };
+    }
 
     function setFillBox() {
         $(this).addClass(game.active().boxClass);
@@ -68,6 +68,7 @@
         this.removeEventListener('mouseout', removeBackGround);
         this.removeEventListener('mouseover', setBackGround);
         game.randomMove();
+        game.miniMove();
     } //what happens when a user clicks a button
 
     function setBackGround() {
@@ -108,7 +109,6 @@
         $('h3 input').css('display', 'none');
         $('.button').eq(0).click(() => nameCheck(1, 2, game.board));
         $('.button').eq(1).click(() => nameCheck(1, 3, game.board));
-        $('.button').eq(2).click(() => nameCheck(1, 3, game.board));
     }// changes html to the start screen
 
     const start = $('div#start')[0].outerHTML;
