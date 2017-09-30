@@ -1,6 +1,5 @@
 !function () {
     'use strict';
-
     function Player(name) {
         this.name = name;
         this.setType = (type) => {
@@ -10,7 +9,6 @@
             type === 3 ? this.move = 'control' : this.move = '';
         };
     } //Player Constructor
-
     function Match() {
         this.active = () => $('header ul li#player1').hasClass('active') ? game.player1 : game.player2;
         this.tie = $('div.screen-win-tie')[0].outerHTML;
@@ -52,13 +50,12 @@
                         thinking = false;
                         $('.box').eq(randomGuess).click();
                     } else {
-                        var randomGuess = Math.floor(Math.random() * 9);
+                        randomGuess = Math.floor(Math.random() * 9);
                     }
                 } while (thinking);
             }
         };
     }
-
     function setFillBox() {
         $(this).addClass(game.active().boxClass);
         game.winner();
@@ -68,17 +65,13 @@
         this.removeEventListener('mouseout', removeBackGround);
         this.removeEventListener('mouseover', setBackGround);
         game.randomMove();
-        game.miniMove();
     } //what happens when a user clicks a button
-
     function setBackGround() {
         this.style.backgroundImage = `url('img/${game.active().icon}')`;
     } //defines mouse overs
-
     function removeBackGround() {
         this.style.backgroundImage = '';
     } //defines what happens on mouseouts
-
     function nameCheck(player1, player2, state) {
         $('.button').css('display', 'none');
         $('input').eq(player1 - 1).css('display', '');
@@ -91,7 +84,6 @@
             game.player1Name.length > 0 && player2 !== 2 ? newGame(player1, player2, state) : '';
         });
     }//validates and stores the names
-
     function newGame(type1, type2, state) {
         $('body div').replaceWith(state);
         $('header ul li#player1').addClass('active');
@@ -101,18 +93,16 @@
         game.player2.setType(type2);
         game.events();
     } //what happens after a user clicks any new Game.
-
     function startGame(state) {
-        var message = $('.active').attr('id') === 'player1' ? game.player1Name : game.player2Name;
+        let message = $('.active').attr('id') === 'player1' ? game.player1Name : game.player2Name;
         $('body div').replaceWith(state);
         $('p.message').html(`${message} is the Winner!!!`)
         $('h3 input').css('display', 'none');
         $('.button').eq(0).click(() => nameCheck(1, 2, game.board));
         $('.button').eq(1).click(() => nameCheck(1, 3, game.board));
     }// changes html to the start screen
-
     const start = $('div#start')[0].outerHTML;
-    var game = new Match();
+    let game = new Match();
     $('body div').remove();
     $('body').children().first().before('<div></div');
     startGame(start);
