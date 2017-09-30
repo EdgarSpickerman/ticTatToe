@@ -1,4 +1,4 @@
-!function() {
+!function () {
     'use strict';
 
     function Player(name) {
@@ -9,9 +9,16 @@
             type === 1 ? this.message = game.p1message : this.message = game.p2message;
             type === 3 ? this.move = 'control' : this.move = '';
         };
-    }
+    } //Player Constructor
 
-    function Map() {
+    function Match() {
+        this.active = () => $('header ul li#player1').hasClass('active') ? game.player1 : game.player2;
+        this.tie = $('div.screen-win-tie')[0].outerHTML;
+        this.p1message = $('div.screen-win-one')[0].outerHTML;
+        this.p2message = $('div.screen-win-two')[0].outerHTML;
+        this.player1 = new Player('player1')
+        this.player2 = new Player('Spaz')
+        this.map = new Map();
         this.board = $('#board')[0].outerHTML;
         this.events = () => {
             for (var i = 0; i < 9; i++) {
@@ -21,16 +28,6 @@
                 $('.box')[i].classList.add(i);
             }
         };
-    }
-
-    function Match() {
-        this.start = $('div#start')[0].outerHTML;
-        this.tie = $('div.screen-win-tie')[0].outerHTML;
-        this.p1message = $('div.screen-win-one')[0].outerHTML;
-        this.p2message = $('div.screen-win-two')[0].outerHTML;
-        this.player1 = new Player('player1');
-        this.player2 = new Player('Spaz');
-        this.map = new Map();
         this.winner = () => {
             game.winNum = [[0, 1, 2], [0, 3, 6], [0, 4, 8], [3, 4, 5], [1, 4, 7], [2, 4, 6], [6, 7, 8], [2, 5, 8]];
             let arr = [];
@@ -38,20 +35,14 @@
                 arr.push(JSON.parse($(`.${game.active().boxClass}`)[i].classList[1]));
                 for (var j = 0; j < 8; j++) {
                     if (arr.includes(game.winNum[j][0]) && arr.includes(game.winNum[j][1]) && arr.includes(game.winNum[j][2])) {
-                        $('body div').replaceWith(game.active().message);
-                        $('p.message').html(`${game.active().name} is the Winner!!!`)
+                        startGame(game.active().message);
                     }
                 }/*end of j loop*/
             }/*end of i loop*/
             if ($(`.${game.active().boxClass}`).length >= 5) {
-                $('body div').replaceWith(game.tie);
+                startGame(game.tie);
             }
-            $('h3 input').css('display', '');
-            $('.button').eq(0).click(() => continueGame(1, 2, game.map.board));
-            $('.button').eq(1).click(() => continueGame(1, 3, game.map.board));
-            $('.button').eq(2).click(() => continueGame(1, 3, game.map.board));
         };
-        this.active = () => $('header ul li#player1').hasClass('active') ? game.player1 : game.player2;
         this.randomMove = () => {
             if (game.active().move === 'control') {
                 var thinking = true;
@@ -66,7 +57,8 @@
                 } while (thinking);
             }
         }
-    }
+    } //Match or game Constructor
+
     function setFillBox() {
         $(this).addClass(game.active().boxClass);
         game.winner();
@@ -76,31 +68,52 @@
         this.removeEventListener('mouseout', removeBackGround);
         this.removeEventListener('mouseover', setBackGround);
         game.randomMove();
-    }
+    } //what happens when a user clicks a button
 
     function setBackGround() {
         this.style.backgroundImage = `url('img/${game.active().icon}')`;
-    }
+    } //defines mouse overs
 
-    function removeBackGround(){
+    function removeBackGround() {
         this.style.backgroundImage = '';
-    }
+    } //defines what happens on mouseouts
 
-    function continueGame(type1, type2, state) {
-        var game = Object.assign({}, gameInstance);
+    function nameCheck(player1, player2, state) {
+        $('.button').css('display', 'none');
+        $('input').eq(player1 - 1).css('display', '');
+        $('input').eq(player2 - 1).css('display', '');
+        $('input').change(() => {
+            game.player1Name = $('input').eq(0).val();
+            game.player2Name = $('input').eq(1).val();
+            game.player1Name.length > 0 && game.player2Name.length > 0 ? newGame(player1, player2, state) : '';
+            game.player2Name === '' ? game.player2Name = 'Spaz' : '';
+            game.player1Name.length > 0 && player2 !== 2 ? newGame(player1, player2, state) : '';
+        });
+    }//validates and stores the names
+
+    function newGame(type1, type2, state) {
         $('body div').replaceWith(state);
         $('header ul li#player1').addClass('active');
+        $('#player1 p.names').html(game.player1Name);
+        $('#player2 p.names').html(game.player2Name);
         game.player1.setType(type1);
         game.player2.setType(type2);
-        game.map.events();
-    }
+        game.events();
+    } //what happens after a user clicks any new Game.
 
-    var gameInstance = new Match();
+    function startGame(state) {
+        var message = $('.active').attr('id') === 'player1' ? game.player1Name : game.player2Name;
+        $('body div').replaceWith(state);
+        $('p.message').html(`${message} is the Winner!!!`)
+        $('h3 input').css('display', 'none');
+        $('.button').eq(0).click(() => nameCheck(1, 2, game.board));
+        $('.button').eq(1).click(() => nameCheck(1, 3, game.board));
+        $('.button').eq(2).click(() => nameCheck(1, 3, game.board));
+    }// changes html to the start screen
+
+    const start = $('div#start')[0].outerHTML;
+    var game = new Match();
     $('body div').remove();
-    var game = Object.assign({}, gameInstance);
-    $('body').children().first().before($(game.start));
-    $('h3 input').css('display', 'none');
-    $('.button').eq(0).click(() => continueGame(1, 2, game.map.board));
-    $('.button').eq(1).click(() => continueGame(1, 3, game.map.board));
-    $('.button').eq(2).click(() => continueGame(1, 3, game.map.board));
+    $('body').children().first().before('<div></div');
+    startGame(start);
 }();

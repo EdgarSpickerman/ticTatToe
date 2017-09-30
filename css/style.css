@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 body {
   background: #fff;
   font-family: "Montserrat", sans-serif; }
@@ -137,5 +137,9 @@ h1 {
     .boxes .box-filled-2 {
       background-color: #3688C3;
       background-image: url(../img/x.svg); }
-
+p.names {
+    margin: 0 0;
+    font-size: 1.5em;
+    color: black;
+}
 
