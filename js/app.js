@@ -15,11 +15,10 @@
         this.tie = $('div.screen-win-tie')[0].outerHTML;
         this.p1message = $('div.screen-win-one')[0].outerHTML;
         this.p2message = $('div.screen-win-two')[0].outerHTML;
-        this.player1 = new Player('player1')
-        this.player2 = new Player('Spaz')
+        this.player1 = new Player('player1');
+        this.player2 = new Player('Spaz');
         this.map = new Map();
         this.board = $('#board')[0].outerHTML;
-
         this.events = () => {
             for (var i = 0; i < 9; i++) {
                 $('.box')[i].addEventListener('click', setFillBox);
@@ -28,7 +27,6 @@
                 $('.box')[i].classList.add(i);
             }
         }; //generates the events on the board
-
         this.winner = () => {
             game.winNum = [[0, 1, 2], [0, 3, 6], [0, 4, 8], [3, 4, 5], [1, 4, 7], [2, 4, 6], [6, 7, 8], [2, 5, 8]];
             let arr = [];
@@ -44,7 +42,6 @@
                 startGame(game.tie);
             }
         };//determines if there is a win or tie and advances the board accordingly
-
         this.randomMove = () => {
             if (game.active().move === 'control') {
                 var thinking = true;
@@ -71,7 +68,7 @@
         this.removeEventListener('mouseover', setBackGround);
         game.randomMove();
     } //1) adds active class to active player, 2)checks to see if win/tie, 3)switches player after click,
-        //4)determines if player is computer, 5)removes events on click spots
+    //4)determines if player is computer, 5)removes events on click spots
 
     function setBackGround() {
         this.style.backgroundImage = `url('img/${game.active().icon}')`;
